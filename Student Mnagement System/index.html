@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Management System</title>
+  <style>
+    :root {
+      /* Light theme colors */
+      --color-bg: #ffffff;
+      --color-bg-alt: #f9fafb;
+      --color-text-primary: #111827;
+      --color-text-secondary: #4b5563;
+      --color-text-muted: #6b7280;
+      --color-primary: #2563eb;
+      --color-primary-hover: #1e40af;
+      --color-border: #e5e7eb;
+      --color-shadow: rgba(0, 0, 0, 0.08);
+      --color-card-bg: #ffffff;
+      --color-success: #16a34a;
+      --color-danger: #dc2626;
+      --color-warning: #d97706;
+
+      /* Dark theme colors (overrides) */
+      --color-bg-dark: #121212;
+      --color-bg-alt-dark: #1e1e1e;
+      --color-text-primary-dark: #e4e4e7;
+      --color-text-secondary-dark: #a1a1aa;
+      --color-text-muted-dark: #52525b;
+      --color-primary-dark: #3b82f6;
+      --color-primary-hover-dark: #2563eb;
+      --color-border-dark: #2c2c2c;
+      --color-shadow-dark: rgba(0, 0, 0, 0.3);
+      --color-card-bg-dark: #1f2937;
+    }
+
+    /* Dark mode */
+    .dark {
+      --color-bg: var(--color-bg-dark);
+      --color-bg-alt: var(--color-bg-alt-dark);
+      --color-text-primary: var(--color-text-primary-dark);
+      --color-text-secondary: var(--color-text-secondary-dark);
+      --color-text-muted: var(--color-text-muted-dark);
+      --color-primary: var(--color-primary-dark);
+      --color-primary-hover: var(--color-primary-hover-dark);
+      --color-border: var(--color-border-dark);
+      --color-shadow: var(--color-shadow-dark);
+      --color-card-bg: var(--color-card-bg-dark);
+    }
+
+    /* Reset & base */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
+      font-size: 18px;
+      line-height: 1.5;
+      background-color: var(--color-bg);
+      color: var(--color-text-muted);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    h1, h2, h3, h4 {
+      margin: 0;
+      color: var(--color-text-primary);
+      font-weight: 700;
+      user-select: none;
+    }
+    h1 {
+      font-size: 3.25rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 1.25rem;
+      color: var(--color-text-secondary);
+      user-select: text;
+    }
+    small {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    a:hover,
+    a:focus {
+      color: var(--color-primary-hover);
+      outline-offset: 4px;
+      outline-color: var(--color-primary-hover);
+      outline-style: solid;
+      outline-width: 2px;
+    }
+
+    /* Link resets for buttons */
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header / Navigation */
+    header,
+    nav {
+      width: 100%;
+      user-select: none;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      background-color: var(--color-bg);
+      border-bottom: 1px solid var(--color-border);
+      z-index: 20;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    nav .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+    }
+    .logo {
+      font-size: 1.5rem;
+      color: var(--color-text-primary);
+      user-select: none;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      cursor: default;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.75rem;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline-flex;
+      align-items: center;
+      user-select: none;
+    }
+    nav ul li a {
+      color: var(--color-text-muted);
+      padding: 0.15rem 0.25rem;
+      border-radius: 0.5rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    nav ul li a:hover,
+    nav ul li a:focus {
+      background-color: var(--color-primary);
+      color: white;
+      outline: none;
+      box-shadow: 0 0 8px var(--color-primary);
+    }
+    /* CTA button on nav */
+    button.nav-cta {
+      background-color: var(--color-primary);
+      color: white;
+      font-weight: 700;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    button.nav-cta:hover,
+    button.nav-cta:focus {
+      background-color: var(--color-primary-hover);
+      outline-offset: 3px;
+      outline-color: var(--color-primary-hover);
+      transform: scale(1.07);
+      outline-style: solid;
+      outline-width: 2px;
+    }
+
+    /* Theme toggle button */
+    button#theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    button#theme-toggle:hover,
+    button#theme-toggle:focus {
+      color: var(--color-primary);
+      transform: scale(1.15);
+      outline: none;
+    }
+
+    /* Hero Section */
+    #hero {
+      padding-top: 6rem;
+      padding-bottom: 5rem;
+      user-select: none;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3rem;
+    }
+    #hero h1 {
+      font-weight: 800;
+      color: var(--color-text-primary);
+      margin-bottom: 1rem;
+    }
+    #hero p {
+      color: var(--color-text-secondary);
+      font-size: 1.25rem;
+    }
+    #hero button.cta {
+      margin-top: 2rem;
+      background-color: var(--color-primary);
+      color: white;
+      border-radius: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    #hero button.cta:hover,
+    #hero button.cta:focus {
+      background-color: var(--color-primary-hover);
+      outline-offset: 4px;
+      outline-color: var(--color-primary-hover);
+      transform: scale(1.05);
+      outline-style: solid;
+      outline-width: 2px;
+    }
+
+    /* Main Content */
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    /* Tabs navigation for app sections */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--color-border);
+      user-select: none;
+      max-width: 1200px;
+      margin: 0 auto 1.5rem;
+      padding: 0 2rem;
+    }
+    .tab {
+      padding: 1rem 1.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    .tab:hover,
+    .tab:focus {
+      color: var(--color-primary);
+      outline: none;
+    }
+    .tab.active {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    /* Content sections for each tab */
+    section.tab-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+      display: none;
+      user-select: text;
+    }
+    section.tab-content.active {
+      display: block;
+    }
+
+    /* Cards */
+    .card {
+      background-color: var(--color-card-bg);
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 12px var(--color-shadow);
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    .card:hover,
+    .card:focus-within {
+      box-shadow: 0 8px 18px var(--color-shadow);
+      transform: translateY(-4px);
+      outline: none;
+    }
+
+    /* Buttons */
+    button,
+    .btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 0.75rem;
+      background-color: var(--color-primary);
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.6rem 1.5rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button:hover,
+    button:focus,
+    .btn:hover,
+    .btn:focus {
+      background-color: var(--color-primary-hover);
+      outline-offset: 4px;
+      outline-color: var(--color-primary-hover);
+      outline-style: solid;
+      outline-width: 2px;
+      transform: scale(1.05);
+    }
+    button:disabled,
+    button[disabled],
+    .btn:disabled,
+    .btn[disabled] {
+      background-color: var(--color-border);
+      cursor: not-allowed;
+      transform: none;
+      outline: none;
+    }
+    .btn-icon {
+      background: none;
+      color: var(--color-primary);
+      padding: 0.25rem;
+      border-radius: 0.5rem;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-icon:hover,
+    .btn-icon:focus {
+      color: var(--color-primary-hover);
+      transform: scale(1.2);
+      outline: none;
+    }
+
+    /* Inputs, selects, textareas */
+    input[type='text'],
+    input[type='number'],
+    select,
+    textarea {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+        sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--color-text-primary);
+      background-color: var(--color-bg-alt);
+      border: 1.5px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.6rem 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: text;
+      width: 100%;
+    }
+    input[type='text']:focus,
+    input[type='number']:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 6px var(--color-primary);
+      outline: none;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      user-select: none;
+      color: var(--color-text-secondary);
+      font-size: 1rem;
+    }
+    /* Floating label container */
+    .field {
+      position: relative;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    /* Floating label style */
+    input:focus + label,
+    select:focus + label,
+    input:not(:placeholder-shown) + label,
+    select:not([value='']) + label {
+      font-size: 0.75rem;
+      color: var(--color-primary);
+      top: -0.6rem;
+      left: 1rem;
+      background-color: var(--color-bg);
+      padding: 0 0.25rem;
+      position: absolute;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      user-select: none;
+    }
+    label {
+      position: absolute;
+      left: 1.1rem;
+      top: 0.6rem;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      color: var(--color-text-muted);
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      user-select: text;
+    }
+    thead {
+      background-color: var(--color-bg-alt);
+      border-bottom: 2px solid var(--color-border);
+    }
+    th,
+    td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--color-border);
+    }
+    th {
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    th.sortable::after {
+      content: '▾';
+      font-size: 0.75rem;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+    th.sortable:hover::after,
+    th.sortable.active::after {
+      opacity: 1;
+    }
+
+    /* Pagination */
+    .pagination {
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding-top: 1rem;
+      flex-wrap: wrap;
+      user-select: none;
+    }
+    .pagination button {
+      background-color: var(--color-bg-alt);
+      color: var(--color-primary);
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      font-weight: 700;
+      font-size: 1rem;
+      border: 1px solid var(--color-primary);
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .pagination button.active,
+    .pagination button:hover,
+    .pagination button:focus {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+      outline: none;
+      transform: scale(1.1);
+    }
+    .pagination button:disabled,
+    .pagination button[disabled] {
+      background-color: var(--color-border);
+      color: var(--color-text-muted);
+      cursor: not-allowed;
+      transform: none;
+      outline: none;
+    }
+
+    /* Search input */
+    .search-input {
+      max-width: 320px;
+      margin-bottom: 1rem;
+    }
+    .search-input input[type='search'] {
+      width: 100%;
+      padding-left: 2.75rem;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      border: 1.5px solid var(--color-border);
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+    .search-input input[type='search']:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 6px var(--color-primary);
+      outline: none;
+    }
+    .search-input svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      position: absolute;
+      top: 50%;
+      left: 0.75rem;
+      pointer-events: none;
+      fill: var(--color-text-muted);
+      transform: translateY(-50%);
+    }
+    .field.position-relative {
+      position: relative;
+    }
+
+    /* Attendance toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--color-border);
+      border-radius: 34px;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .slider::before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--color-bg);
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    input:checked + .slider {
+      background-color: var(--color-primary);
+    }
+    input:checked + .slider::before {
+      transform: translateX(20px);
+    }
+
+    /* Grades input, centered */
+    .grades-container {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .grade-field {
+      width: 72px;
+      text-align: center;
+    }
+
+    /* Modal styles */
+    #modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    #modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background-color: var(--color-card-bg);
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px var(--color-shadow);
+      max-width: 480px;
+      width: 100%;
+      padding: 2rem;
+      position: relative;
+      user-select: text;
+    }
+    .modal h3 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--color-text-primary);
+      user-select: none;
+    }
+    .modal .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: none;
+      background: none;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .modal .close-btn:hover,
+    .modal .close-btn:focus {
+      color: var(--color-primary);
+      outline: none;
+    }
+
+    /* Notification panel */
+    #notification-panel {
+      max-width: 1200px;
+      margin: 0 auto 3rem;
+      padding: 1.25rem 2rem;
+      border-radius: 0.75rem;
+      background-color: var(--color-bg-alt);
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: 1.125rem;
+      user-select: none;
+      box-shadow: 0 4px 12px var(--color-shadow);
+    }
+
+    /* Dashboard cards layout */
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+      margin-bottom: 3rem;
+    }
+    .dashboard-card {
+      padding: 1.5rem 2rem;
+      border-radius: 0.75rem;
+      background-color: var(--color-card-bg);
+      box-shadow: 0 4px 12px var(--color-shadow);
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      user-select: none;
+    }
+    .dashboard-card:hover,
+    .dashboard-card:focus-within {
+      box-shadow: 0 8px 20px var(--color-shadow);
+      transform: translateY(-4px);
+      outline: none;
+    }
+    .dashboard-card h4 {
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+    .dashboard-card .metric-value {
+      font-weight: 900;
+      font-size: 2.5rem;
+      line-height: 1.1;
+      color: var(--color-primary);
+    }
+    .dashboard-card .metric-desc {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+    }
+
+    /* Line chart with inline SVG */
+    svg.line-chart {
+      width: 100%;
+      height: 100px;
+      overflow: visible;
+      user-select: none;
+      margin-top: 1rem;
+      stroke: var(--color-primary);
+      stroke-width: 2;
+      fill: none;
+    }
+    svg.line-chart circle {
+      fill: var(--color-primary);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+    svg.line-chart circle:hover,
+    svg.line-chart circle:focus {
+      transform: scale(1.3);
+      outline: none;
+    }
+
+    /* Messaging */
+    #messaging {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    #message-list {
+      max-height: 300px;
+      overflow-y: auto;
+      background-color: var(--color-bg-alt);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: inset 0 0 6px var(--color-shadow);
+      user-select: text;
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .message {
+      background-color: var(--color-card-bg);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 6px var(--color-shadow);
+      user-select: text;
+      word-break: break-word;
+      font-weight: 500;
+    }
+    form#message-form {
+      display: flex;
+      gap: 1rem;
+    }
+    #message-form input[type='text'] {
+      flex-grow: 1;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1.5px solid var(--color-border);
+      transition: border-color 0.3s ease;
+    }
+    #message-form input[type='text']:focus {
+      border-color: var(--color-primary);
+      outline: none;
+      box-shadow: 0 0 6px var(--color-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav ul {
+        gap: 1rem;
+      }
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      main {
+        padding-bottom: 2rem;
+      }
+      .tabs {
+        padding: 0 1rem;
+      }
+      section.tab-content {
+        padding: 0 1rem 2rem;
+      }
+      #hero {
+        font-size: 1rem;
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin-bottom: 2rem;
+      }
+      #hero h1 {
+        font-size: 2.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav role="navigation" aria-label="Primary navigation">
+    <div class="nav-container">
+      <div class="logo" tabindex="0" aria-label="Advanced Student Management System">StudentMS Pro</div>
+      <ul role="menubar" aria-label="Main menu">
+        <li role="none"><a role="menuitem" href="#dashboard" tabindex="0" class="tab-link active">Dashboard</a></li>
+        <li role="none"><a role="menuitem" href="#students" tabindex="-1" class="tab-link">Students</a></li>
+        <li role="none"><a role="menuitem" href="#attendance" tabindex="-1" class="tab-link">Attendance</a></li>
+        <li role="none"><a role="menuitem" href="#grades" tabindex="-1" class="tab-link">Grades</a></li>
+        <li role="none"><a role="menuitem" href="#messaging" tabindex="-1" class="tab-link">Messaging</a></li>
+      </ul>
+      <button class="nav-cta" id="open-add-student" aria-label="Open add student modal">Add Student</button>
+      <button id="theme-toggle" aria-label="Toggle light and dark mode" title="Toggle Light/Dark Mode" aria-pressed="false">&#9788;</button>
+    </div>
+  </nav>
+
+  <header id="hero" role="banner" aria-label="Application introduction">
+    <h1>Manage Students, Attendance, Grades, and Communication</h1>
+    <p>Advanced system for educational institutions with powerful tools, analytics, and collaboration features.</p>
+    <button class="cta" id="hero-add-student">Get Started: Add Student</button>
+  </header>
+
+  <main role="main" id="app-main">
+    <!-- Dashboard tab content -->
+    <section class="tab-content active" id="dashboard" tabindex="0" aria-live="polite" aria-label="Dashboard overview">
+      <h2>Dashboard Overview</h2>
+      <div class="dashboard-cards" aria-label="Overview metrics">
+        <article class="dashboard-card" tabindex="0" aria-describedby="total-students-desc">
+          <h4>Total Students</h4>
+          <div class="metric-value" id="total-students">0</div>
+          <p class="metric-desc" id="total-students-desc">Number of enrolled students</p>
+        </article>
+        <article class="dashboard-card" tabindex="0" aria-describedby="attendance-rate-desc">
+          <h4>Attendance Rate</h4>
+          <div class="metric-value" id="attendance-rate">0%</div>
+          <p class="metric-desc" id="attendance-rate-desc">Average attendance for today</p>
+          <svg class="line-chart" aria-hidden="true" focusable="false" viewBox="0 0 120 100" aria-label="Attendance trend chart">
+            <polyline id="attendance-trend" fill="none" stroke="var(--color-primary)" stroke-width="3" points="" />
+            <circle cx="10" cy="90" r="4" tabindex="0"></circle>
+            <circle cx="40" cy="60" r="4" tabindex="0"></circle>
+            <circle cx="70" cy="80" r="4" tabindex="0"></circle>
+            <circle cx="100" cy="50" r="4" tabindex="0"></circle>
+          </svg>
+        </article>
+        <article class="dashboard-card" tabindex="0" aria-describedby="grade-average-desc">
+          <h4>Average Grade</h4>
+          <div class="metric-value" id="average-grade">N/A</div>
+          <p class="metric-desc" id="grade-average-desc">Average of all grades</p>
+          <svg class="line-chart" aria-hidden="true" focusable="false" viewBox="0 0 120 100" aria-label="Grade trend chart">
+            <polyline id="grades-trend" fill="none" stroke="var(--color-primary)" stroke-width="3" points="" />
+            <circle cx="10" cy="40" r="4" tabindex="0"></circle>
+            <circle cx="40" cy="70" r="4" tabindex="0"></circle>
+            <circle cx="70" cy="60" r="4" tabindex="0"></circle>
+            <circle cx="100" cy="30" r="4" tabindex="0"></circle>
+          </svg>
+        </article>
+      </div>
+    </section>
+
+    <!-- Students tab content -->
+    <section class="tab-content" id="students" tabindex="0" aria-label="Student listing and management">
+      <h2>Student Management</h2>
+      <div class="search-input position-relative" role="search" aria-label="Search students">
+        <input type="search" placeholder="Search students by name or class" id="search-students" aria-describedby="search-desc" />
+        <label for="search-students" id="search-desc" hidden>Search students by name or class</label>
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+          <path d="M21 21l-4.35-4.35m1.5-5.25a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <table aria-label="Students table" id="students-table">
+        <thead>
+          <tr>
+            <th scope="col" class="sortable" data-sort-key="name" tabindex="0" aria-sort="none">Name</th>
+            <th scope="col" class="sortable" data-sort-key="age" tabindex="0" aria-sort="none">Age</th>
+            <th scope="col" class="sortable" data-sort-key="class" tabindex="0" aria-sort="none">Class</th>
+            <th scope="col" aria-hidden="true">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="students-tbody">
+          <tr><td colspan="4" style="color: var(--color-text-muted); text-align:center;">No students enrolled.</td></tr>
+        </tbody>
+      </table>
+      <div class="pagination" role="navigation" aria-label="Students table pagination" id="students-pagination"></div>
+    </section>
+
+    <!-- Attendance tab content -->
+    <section class="tab-content" id="attendance" tabindex="0" aria-label="Attendance tracking and management">
+      <h2>Attendance Tracking</h2>
+      <button id="mark-all-present" class="btn" aria-label="Mark all students present">Mark All Present</button>
+      <button id="mark-all-absent" class="btn" aria-label="Mark all students absent">Mark All Absent</button>
+
+      <table aria-label="Attendance table" id="attendance-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Class</th>
+            <th scope="col">Present</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-tbody">
+          <tr><td colspan="3" style="color: var(--color-text-muted); text-align:center;">No students enrolled.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Grades tab content -->
+    <section class="tab-content" id="grades" tabindex="0" aria-label="Grades input and management">
+      <h2>Grade Management</h2>
+      <p>Input grades (A-F) for selected subjects per student.</p>
+      <table aria-label="Grades table" id="grades-table" role="grid">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Class</th>
+            <th scope="col" tabindex="0" aria-sort="none" class="sortable" data-sort-key="Math">Math</th>
+            <th scope="col" tabindex="0" aria-sort="none" class="sortable" data-sort-key="Science">Science</th>
+            <th scope="col" tabindex="0" aria-sort="none" class="sortable" data-sort-key="History">History</th>
+          </tr>
+        </thead>
+        <tbody id="grades-tbody">
+          <tr><td colspan="5" style="color: var(--color-text-muted); text-align:center;">No students enrolled.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Messaging tab content -->
+    <section class="tab-content" id="messaging" tabindex="0" aria-label="Messaging center">
+      <h2>Messaging Center</h2>
+      <div id="message-list" aria-live="polite" aria-relevant="additions" tabindex="0" role="log" aria-label="System messages"></div>
+      <form id="message-form" aria-label="Send a message">
+        <input
+          type="text"
+          id="message-input"
+          autocomplete="off"
+          placeholder="Type a message"
+          aria-label="Message input"
+          required
+          minlength="1"
+          maxlength="250"
+        />
+        <button type="submit" aria-label="Send message">Send</button>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Add/Edit Student Modal -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+    <section class="modal" tabindex="0" id="student-modal">
+      <button class="close-btn" aria-label="Close modal">&times;</button>
+      <h3 id="modal-title">Add Student</h3>
+      <form id="student-form" novalidate>
+        <div class="field">
+          <input type="text" id="modal-name" placeholder=" " autocomplete="off" required />
+          <label for="modal-name">Full Name *</label>
+        </div>
+        <div class="field">
+          <input type="number" id="modal-age" placeholder=" " min="3" max="100" required />
+          <label for="modal-age">Age *</label>
+        </div>
+        <div class="field">
+          <select id="modal-class" required>
+            <option value="" disabled selected></option>
+            <option value="Nursery">Nursery</option>
+            <option value="Kindergarten">Kindergarten</option>
+            <option value="1st Grade">1st Grade</option>
+            <option value="2nd Grade">2nd Grade</option>
+            <option value="3rd Grade">3rd Grade</option>
+            <option value="4th Grade">4th Grade</option>
+            <option value="5th Grade">5th Grade</option>
+            <option value="6th Grade">6th Grade</option>
+            <option value="7th Grade">7th Grade</option>
+            <option value="8th Grade">8th Grade</option>
+            <option value="9th Grade">9th Grade</option>
+            <option value="10th Grade">10th Grade</option>
+          </select>
+          <label for="modal-class">Class *</label>
+        </div>
+        <button type="submit" id="save-student-btn" aria-label="Save student">Save Student</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- Notification panel -->
+  <div id="notification-panel" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      // Initial dummy data for demo
+      const subjects = ['Math', 'Science', 'History'];
+
+      let students = [
+        {
+          id: 1,
+          name: 'Alice Johnson',
+          age: 14,
+          class: '8th Grade',
+          attendance: true,
+          grades: { Math: 'A', Science: 'B', History: 'A' },
+        },
+        {
+          id: 2,
+          name: 'Bob Smith',
+          age: 15,
+          class: '9th Grade',
+          attendance: false,
+          grades: { Math: 'C', Science: 'A', History: 'B' },
+        },
+        {
+          id: 3,
+          name: 'Charlie Rose',
+          age: 13,
+          class: '7th Grade',
+          attendance: true,
+          grades: { Math: 'B', Science: 'B', History: 'C' },
+        },
+      ];
+
+      // State for current tab and sorting
+      let currentTab = 'dashboard';
+      let sortState = {
+        students: { key: null, order: null },
+        grades: { key: null, order: null },
+      };
+      let pagination = {
+        students: { page: 1, pageSize: 5, totalPages: 1 },
+      };
+
+      // DOM Elements
+      const tabs = document.querySelectorAll('.tab-link');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const notificationPanel = document.getElementById('notification-panel');
+      const themeToggleBtn = document.getElementById('theme-toggle');
+
+      // Modal Elements
+      const modalOverlay = document.getElementById('modal-overlay');
+      const studentModal = document.getElementById('student-modal');
+      const studentForm = document.getElementById('student-form');
+      const modalTitle = document.getElementById('modal-title');
+      const modalNameInput = document.getElementById('modal-name');
+      const modalAgeInput = document.getElementById('modal-age');
+      const modalClassSelect = document.getElementById('modal-class');
+      const saveStudentBtn = document.getElementById('save-student-btn');
+      const openAddStudentBtn = document.getElementById('open-add-student');
+      const heroAddStudentBtn = document.getElementById('hero-add-student');
+
+      // Tables and containers
+      const studentsTbody = document.getElementById('students-tbody');
+      const studentsPagination = document.getElementById('students-pagination');
+      const searchStudentsInput = document.getElementById('search-students');
+
+      const attendanceTbody = document.getElementById('attendance-tbody');
+      const marksAllPresentBtn = document.getElementById('mark-all-present');
+      const marksAllAbsentBtn = document.getElementById('mark-all-absent');
+
+      const gradesTbody = document.getElementById('grades-tbody');
+
+      const messageList = document.getElementById('message-list');
+      const messageForm = document.getElementById('message-form');
+      const messageInput = document.getElementById('message-input');
+
+      // Dashboard elements
+      const totalStudentsEl = document.getElementById('total-students');
+      const attendanceRateEl = document.getElementById('attendance-rate');
+      const averageGradeEl = document.getElementById('average-grade');
+      const attendanceTrendPoly = document.getElementById('attendance-trend');
+      const gradesTrendPoly = document.getElementById('grades-trend');
+
+      // Utility: Stable id generator for new students
+      let nextId = 4;
+
+      // Mode / Theme management
+      function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+      }
+      function updateThemeIcon() {
+        themeToggleBtn.textContent = isDarkMode() ? '🌙' : '☀️';
+        themeToggleBtn.setAttribute('aria-pressed', isDarkMode());
+      }
+      themeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        updateThemeIcon();
+      });
+      updateThemeIcon();
+
+      // Tabs switching
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = tab.dataset && tab.dataset.target ? tab.dataset.target : tab.getAttribute('href').slice(1);
+          switchTab(target || tab.textContent.trim().toLowerCase());
+        });
+        // Accessibility keyboard handling
+        tab.addEventListener('keydown', function (e) {
+          if (['ArrowRight', 'ArrowLeft'].includes(e.key)) {
+            e.preventDefault();
+            let idx = Array.from(tabs).indexOf(e.currentTarget);
+            if (e.key === 'ArrowRight') {
+              idx = (idx + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+              idx = (idx - 1 + tabs.length) % tabs.length;
+            }
+            tabs[idx].focus();
+          }
+        });
+      });
+
+      function switchTab(tabId) {
+        if (tabId === currentTab) return;
+        currentTab = tabId;
+
+        // Update tabs and aria-selected, tabindex
+        tabs.forEach((tab) => {
+          const tid = tab.getAttribute('href').slice(1);
+          if (tid === tabId) {
+            tab.classList.add('active');
+            tab.setAttribute('tabindex', '0');
+            tab.setAttribute('aria-selected', 'true');
+          } else {
+            tab.classList.remove('active');
+            tab.setAttribute('tabindex', '-1');
+            tab.setAttribute('aria-selected', 'false');
+          }
+        });
+
+        // Update tab contents displayed
+        tabContents.forEach((section) => {
+          if (section.id === tabId) {
+            section.classList.add('active');
+            section.setAttribute('tabindex', '0');
+            section.focus();
+          } else {
+            section.classList.remove('active');
+            section.setAttribute('tabindex', '-1');
+          }
+        });
+
+        // Focus notification panel reset
+        notificationPanel.textContent = '';
+        // Refresh display data if necessary
+        if (tabId === 'dashboard') renderDashboard();
+        if (tabId === 'students') renderStudentsTable();
+        if (tabId === 'attendance') renderAttendance();
+        if (tabId === 'grades') renderGrades();
+        if (tabId === 'messaging') focusMessageInput();
+      }
+
+      // Notification helper
+      let notificationTimeout;
+      function notify(message) {
+        notificationPanel.textContent = message;
+        if (notificationTimeout) clearTimeout(notificationTimeout);
+        notificationTimeout = setTimeout(() => {
+          notificationPanel.textContent = '';
+        }, 4000);
+      }
+
+      // ========== STUDENTS TAB ==========
+
+      // Filter, search, pagination for students
+      let studentsFiltered = [];
+
+      function filterSearchStudents() {
+        const term = searchStudentsInput.value.trim().toLowerCase();
+        if (!term) {
+          studentsFiltered = [...students];
+        } else {
+          studentsFiltered = students.filter((s) => s.name.toLowerCase().includes(term) || s.class.toLowerCase().includes(term));
+        }
+      }
+
+      // Sort function for generic arrays with key string, order asc/desc
+      function genericSort(arr, key, order = 'asc') {
+        return arr.slice().sort((a, b) => {
+          const valA = typeof a[key] === 'string' ? a[key].toLowerCase() : a[key];
+          const valB = typeof b[key] === 'string' ? b[key].toLowerCase() : b[key];
+          if (valA < valB) return order === 'asc' ? -1 : 1;
+          if (valA > valB) return order === 'asc' ? 1 : -1;
+          return 0;
+        });
+      }
+
+      // Render students table with pagination & sorting
+      function renderStudentsTable() {
+        filterSearchStudents();
+
+        // Apply sorting
+        const { key, order } = sortState.students;
+        if (key) {
+          studentsFiltered = genericSort(studentsFiltered, key, order);
+        }
+
+        // Pagination calculations
+        const pageSize = pagination.students.pageSize;
+        const totalPages = Math.max(1, Math.ceil(studentsFiltered.length / pageSize));
+        pagination.students.totalPages = totalPages;
+        if (pagination.students.page > totalPages) pagination.students.page = totalPages;
+
+        const startIdx = (pagination.students.page - 1) * pageSize;
+        const pageData = studentsFiltered.slice(startIdx, startIdx + pageSize);
+
+        // Render rows
+        studentsTbody.innerHTML = '';
+        if (pageData.length === 0) {
+          studentsTbody.innerHTML = `<tr><td colspan="4" style="color: var(--color-text-muted); text-align:center;">No students found.</td></tr>`;
+          studentsPagination.innerHTML = '';
+          return;
+        }
+
+        for (const s of pageData) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${s.name}</td>
+            <td>${s.age}</td>
+            <td>${s.class}</td>
+            <td style="text-align:right; min-width: 100px;">
+              <button class="btn btn-icon" aria-label="Edit ${s.name}" data-id="${s.id}" title="Edit Student">✏️</button>
+              <button class="btn btn-icon" aria-label="Delete ${s.name}" data-id="${s.id}" title="Delete Student">🗑️</button>
+            </td>
+          `;
+          studentsTbody.appendChild(tr);
+        }
+
+        // Pagination controls
+        renderPaginationControls('students', totalPages, pagination.students.page);
+
+        // Attach event handlers for edit/delete buttons
+        studentsTbody.querySelectorAll('button.btn-icon').forEach((btn) => {
+          btn.onclick = (e) => {
+            const id = Number(btn.getAttribute('data-id'));
+            if (btn.title === 'Edit Student') openEditStudentModal(id);
+            else if (btn.title === 'Delete Student') deleteStudent(id);
+          };
+        });
+      }
+
+      // Render pagination controls
+      function renderPaginationControls(type, totalPages, currentPage) {
+        const container = type === 'students' ? studentsPagination : null;
+        if (!container) return;
+        container.innerHTML = '';
+        if (totalPages <= 1) return;
+
+        function createPageBtn(page) {
+          const btn = document.createElement('button');
+          btn.textContent = page;
+          btn.setAttribute('aria-label', `Go to page ${page}`);
+          if (page === currentPage) {
+            btn.classList.add('active');
+            btn.setAttribute('aria-current', 'page');
+            btn.disabled = true;
+          }
+          btn.onclick = () => {
+            pagination[type].page = page;
+            renderStudentsTable();
+          };
+          return btn;
+        }
+
+        // Prev button
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '←';
+        prevBtn.setAttribute('aria-label', 'Previous page');
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => {
+          if (currentPage > 1) {
+            pagination[type].page--;
+            renderStudentsTable();
+          }
+        };
+        container.appendChild(prevBtn);
+
+        // Pages (limit display for large number)
+        const maxButtons = 7;
+        let start = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+        let end = Math.min(totalPages, start + maxButtons - 1);
+        if (end - start < maxButtons - 1) {
+          start = Math.max(1, end - maxButtons + 1);
+        }
+        for (let i = start; i <= end; i++) {
+          container.appendChild(createPageBtn(i));
+        }
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '→';
+        nextBtn.setAttribute('aria-label', 'Next page');
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => {
+          if (currentPage < totalPages) {
+            pagination[type].page++;
+            renderStudentsTable();
+          }
+        };
+        container.appendChild(nextBtn);
+      }
+
+      // Sorting for students table
+      const studentsTable = document.getElementById('students-table');
+      studentsTable.querySelectorAll('th.sortable').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sortKey;
+          if (!key) return;
+          let order = 'asc';
+          if (sortState.students.key === key) {
+            order = sortState.students.order === 'asc' ? 'desc' : 'asc';
+          }
+          sortState.students = { key, order };
+          // Update aria-sort and active classes on headers
+          studentsTable.querySelectorAll('th.sortable').forEach((header) => {
+            const isActive = header.dataset.sortKey === key;
+            header.classList.toggle('active', isActive);
+            header.setAttribute('aria-sort', isActive ? (order === 'asc' ? 'ascending' : 'descending') : 'none');
+          });
+          renderStudentsTable();
+        });
+        th.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            th.click();
+          }
+        });
+      });
+
+      // Search input handler
+      searchStudentsInput.addEventListener('input', () => {
+        pagination.students.page = 1;
+        renderStudentsTable();
+      });
+
+      // Open modal for adding new student
+      function openAddStudentModal() {
+        modalTitle.textContent = 'Add Student';
+        studentForm.reset();
+        saveStudentBtn.textContent = 'Add Student';
+        saveStudentBtn.setAttribute('data-edit-id', '');
+        openModal();
+      }
+
+      // Open modal for editing student
+      function openEditStudentModal(id) {
+        const student = students.find((s) => s.id === id);
+        if (!student) return;
+
+        modalTitle.textContent = 'Edit Student';
+        modalNameInput.value = student.name;
+        modalAgeInput.value = student.age;
+        modalClassSelect.value = student.class;
+        saveStudentBtn.textContent = 'Save Changes';
+        saveStudentBtn.setAttribute('data-edit-id', id);
+        openModal();
+      }
+
+      // Delete student (confirmation)
+      function deleteStudent(id) {
+        const student = students.find((s) => s.id === id);
+        if (!student) return;
+        if (confirm(`Are you sure you want to delete "${student.name}"? This action cannot be undone.`)) {
+          students = students.filter((s) => s.id !== id);
+          notify(`Deleted student "${student.name}".`);
+          renderStudentsTable();
+          renderAttendance();
+          renderGrades();
+          renderDashboard();
+        }
+      }
+
+      // Modal open/close functions
+      function openModal() {
+        modalOverlay.classList.add('active');
+        modalOverlay.style.display = 'flex';
+        studentModal.focus();
+      }
+      function closeModal() {
+        modalOverlay.classList.remove('active');
+        modalOverlay.style.display = 'none';
+        clearFormValidation();
+      }
+
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+      document.querySelector('.close-btn').addEventListener('click', closeModal);
+
+      // Focus trap inside modal
+      studentModal.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          const focusable = Array.from(studentModal.querySelectorAll('input, select, button, [tabindex]:not([tabindex="-1"])')).filter(f => !f.disabled && f.offsetParent !== null);
+          if (focusable.length === 0) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          closeModal();
+        }
+      });
+
+      // Validate and save student form
+      studentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        clearFormValidation();
+        let valid = true;
+
+        if (!modalNameInput.value.trim()) {
+          showValidationError(modalNameInput, 'Name is required');
+          valid = false;
+        }
+        let ageVal = parseInt(modalAgeInput.value, 10);
+        if (isNaN(ageVal) || ageVal < 3 || ageVal > 100) {
+          showValidationError(modalAgeInput, 'Age must be between 3 and 100');
+          valid = false;
+        }
+        if (!modalClassSelect.value) {
+          showValidationError(modalClassSelect, 'Class is required');
+          valid = false;
+        }
+        if (!valid) return;
+
+        const editId = saveStudentBtn.getAttribute('data-edit-id');
+        if (editId) {
+          // Edit existing student
+          const student = students.find((s) => s.id === Number(editId));
+          if (student) {
+            student.name = modalNameInput.value.trim();
+            student.age = ageVal;
+            student.class = modalClassSelect.value;
+            notify(`Student "${student.name}" updated.`);
+          }
+        } else {
+          // Add new student
+          students.push({
+            id: nextId++,
+            name: modalNameInput.value.trim(),
+            age: ageVal,
+            class: modalClassSelect.value,
+            attendance: false,
+            grades: {},
+          });
+          notify(`Student "${modalNameInput.value.trim()}" added.`);
+        }
+        closeModal();
+        renderStudentsTable();
+        renderAttendance();
+        renderGrades();
+        renderDashboard();
+      });
+
+      // Form validation helpers
+      function showValidationError(el, message) {
+        el.setCustomValidity(message);
+        el.reportValidity();
+      }
+      function clearFormValidation() {
+        modalNameInput.setCustomValidity('');
+        modalAgeInput.setCustomValidity('');
+        modalClassSelect.setCustomValidity('');
+      }
+
+      openAddStudentBtn.addEventListener('click', openAddStudentModal);
+      heroAddStudentBtn.addEventListener('click', () => {
+        switchTab('students');
+        openAddStudentModal();
+      });
+
+      // ========== ATTENDANCE TAB ==========
+
+      function renderAttendance() {
+        attendanceTbody.innerHTML = '';
+        if (students.length === 0) {
+          attendanceTbody.innerHTML = `<tr><td colspan="3" style="color: var(--color-text-muted); text-align:center;">No students enrolled.</td></tr>`;
+          return;
+        }
+
+        for (const s of students) {
+          const tr = document.createElement('tr');
+          const attendanceId = `attendance-checkbox-${s.id}`;
+
+          tr.innerHTML = `
+            <td>${s.name}</td>
+            <td>${s.class}</td>
+            <td style="text-align:center;">
+              <label class="switch" for="${attendanceId}">
+                <input type="checkbox" id="${attendanceId}" data-id="${s.id}" ${s.attendance ? 'checked' : ''} aria-label="Attendance checkbox for ${s.name}" />
+                <span class="slider"></span>
+              </label>
+            </td>
+          `;
+          attendanceTbody.appendChild(tr);
+        }
+        // Add event listeners
+        attendanceTbody.querySelectorAll('input[type="checkbox"]').forEach((checkbox) =>
+          checkbox.addEventListener('change', (e) => {
+            const id = Number(e.target.dataset.id);
+            const student = students.find((s) => s.id === id);
+            if (student) {
+              student.attendance = e.target.checked;
+              notify(`Marked ${student.name} as ${e.target.checked ? 'present' : 'absent'}.`);
+              renderDashboard();
+            }
+          })
+        );
+      }
+
+      marksAllPresentBtn.addEventListener('click', () => {
+        students.forEach((s) => (s.attendance = true));
+        notify('Marked all students present.');
+        renderAttendance();
+        renderDashboard();
+      });
+      marksAllAbsentBtn.addEventListener('click', () => {
+        students.forEach((s) => (s.attendance = false));
+        notify('Marked all students absent.');
+        renderAttendance();
+        renderDashboard();
+      });
+
+      // ========== GRADES TAB ==========
+
+      function renderGrades() {
+        gradesTbody.innerHTML = '';
+        if (students.length === 0) {
+          gradesTbody.innerHTML = `<tr><td colspan="5" style="color: var(--color-text-muted); text-align:center;">No students enrolled.</td></tr>`;
+          return;
+        }
+
+        let sortedStudents = [...students];
+
+        // Apply sort on Grades tab, if any
+        const { key, order } = sortState.grades;
+        if (key) {
+          sortedStudents = genericSort(sortedStudents, key, order);
+        }
+
+        for (const s of sortedStudents) {
+          const tr = document.createElement('tr');
+          const gradeInputs = subjects.map(
+            (subj) =>
+              `<td><input type="text" maxlength="2" pattern="[A-Fa-f]" title="Grades A-F" placeholder="-" value="${s.grades[subj] || ''}" class="grade-input" aria-label="${subj} grade for ${s.name}" data-id="${s.id}" data-subject="${subj}"></td>`
+          ).join('');
+          tr.innerHTML = `
+            <td>${s.name}</td>
+            <td>${s.class}</td>
+            ${gradeInputs}
+          `;
+          gradesTbody.appendChild(tr);
+        }
+
+        // Add event listeners for grade inputs
+        gradesTbody.querySelectorAll('.grade-input').forEach((input) => {
+          input.addEventListener('input', (e) => {
+            const id = Number(e.target.dataset.id);
+            const subject = e.target.dataset.subject;
+            let value = e.target.value.toUpperCase();
+
+            if (!/^[A-F]{0,1}$/.test(value)) {
+              // Remove invalid characters immediately
+              value = value.replace(/[^A-F]/gi, '');
+              e.target.value = value;
+            }
+
+            const student = students.find((s) => s.id === id);
+            if (student) {
+              student.grades[subject] = value;
+              notify(`Updated ${subject} grade for ${student.name} to ${value || '-'}.`);
+              renderDashboard();
+            }
+          });
+        });
+      }
+
+      // Sorting for grades table by subject column
+      const gradesTable = document.getElementById('grades-table');
+      gradesTable.querySelectorAll('th.sortable').forEach((th) => {
+        th.addEventListener('click', () => {
+          const key = th.dataset.sortKey;
+          if (!key) return;
+          let order = 'asc';
+          if (sortState.grades.key === key) {
+            order = sortState.grades.order === 'asc' ? 'desc' : 'asc';
+          }
+          sortState.grades = { key, order };
+
+          gradesTable.querySelectorAll('th.sortable').forEach((header) => {
+            const isActive = header.dataset.sortKey === key;
+            header.classList.toggle('active', isActive);
+            header.setAttribute('aria-sort', isActive ? (order === 'asc' ? 'ascending' : 'descending') : 'none');
+          });
+          renderGrades();
+        });
+        th.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            th.click();
+          }
+        });
+      });
+
+      // ========== DASHBOARD TAB ==========
+
+      // Calculate average attendance rate (%)
+      function calculateAttendanceRate() {
+        if (students.length === 0) return 0;
+        const presentCount = students.filter((s) => s.attendance).length;
+        return Math.round((presentCount / students.length) * 100);
+      }
+
+      // Calculate average grade (convert A-F to numbers, avg all subjects and students)
+      function calculateAverageGrade() {
+        if (students.length === 0) return null;
+        const gradeMap = { A: 6, B: 5, C: 4, D: 3, E: 2, F: 1 };
+        let total = 0;
+        let count = 0;
+        for (const s of students) {
+          for (const subj of subjects) {
+            const g = (s.grades[subj] || '').toUpperCase();
+            if (g && gradeMap[g]) {
+              total += gradeMap[g];
+              count++;
+            }
+          }
+        }
+        if (count === 0) return null;
+        const avg = total / count;
+        // Reverse map average number to letter grade (round)
+        const inverseMap = ['F', 'F', 'E', 'D', 'C', 'B', 'A']; // Index matches values 1-6
+        const rounded = Math.round(avg);
+        return inverseMap[rounded] || 'N/A';
+      }
+
+      // Format points for line chart polyline from data array [0..100]
+      function pointsFromData(data, width, height) {
+        if (!data.length) return '';
+        const step = width / (data.length - 1);
+        const maxVal = 100;
+        return data.map((val, i) => `${i * step},${height - (val / maxVal) * height}`).join(' ');
+      }
+
+      function renderDashboard() {
+        totalStudentsEl.textContent = students.length;
+        attendanceRateEl.textContent = calculateAttendanceRate() + '%';
+        const avgGrade = calculateAverageGrade();
+        averageGradeEl.textContent = avgGrade || 'N/A';
+
+        // Dummy trend data for demo (random noise)
+        // Attendance trend: last 7 days percentages (simulate)
+        const attendanceTrendData = [80, 85, 75, 90, 88, 92, calculateAttendanceRate()];
+        const gradesTrendData = [60, 70, 65, 68, 75, 80, avgGrade ? (avgGrade.charCodeAt(0) - 65 + 1) * (100/6) : 0];
+
+        attendanceTrendPoly.setAttribute(
+          'points',
+          pointsFromData(attendanceTrendData, 120, 100)
+        );
+        gradesTrendPoly.setAttribute(
+          'points',
+          pointsFromData(gradesTrendData, 120, 100)
+        );
+      }
+
+      // ========== MESSAGING TAB ==========
+
+      const messages = [
+        { id: 1, text: 'Welcome to the Student Management System Pro!' },
+      ];
+
+      function renderMessages() {
+        messageList.innerHTML = '';
+        if (messages.length === 0) {
+          messageList.textContent = 'No messages yet.';
+          return;
+        }
+        messages.forEach(({ id, text }) => {
+          const div = document.createElement('div');
+          div.className = 'message';
+          div.tabIndex = 0;
+          div.id = `message-${id}`;
+          div.textContent = text;
+          messageList.appendChild(div);
+        });
+        messageList.scrollTop = messageList.scrollHeight;
+      }
+
+      function focusMessageInput() {
+        messageInput.focus();
+      }
+
+      messageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newMsg = messageInput.value.trim();
+        if (!newMsg) return;
+        messages.push({ id: messages.length + 1, text: newMsg });
+        renderMessages();
+        messageInput.value = '';
+        notify('Message sent.');
+      });
+
+      // ========== Initialization ==========
+
+      // Initial renders
+      renderDashboard();
+      renderStudentsTable();
+      renderAttendance();
+      renderGrades();
+      renderMessages();
+
+      // Initial tab is dashboard
+      switchTab('dashboard');
+
+      // Keyboard shortcut to open add student modal (Ctrl+N)
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
+          e.preventDefault();
+          openAddStudentModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+
